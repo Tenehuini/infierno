@@ -252,5 +252,8 @@ body {
 .install-tab { border: 0; border-radius: 9px; padding: 10px; font: inherit; font-weight: 700; background: transparent; color: var(--muted); }
 .install-tab[aria-selected="true"] { background: var(--surface-2); color: var(--text); }
 .install-panel ol { margin: 0; padding-left: 22px; display: grid; gap: 10px; line-height: 1.4; }
+.install-url { display: flex; align-items: center; gap: 6px; margin-top: 6px; padding: 4px 4px 4px 10px; border-radius: 10px; background: var(--bg); }
+.install-url code { flex: 1; min-width: 0; font-size: .88rem; word-break: break-all; -webkit-user-select: all; user-select: all; }
+.copy-url { flex: none; border: 0; border-radius: 8px; padding: 8px 10px; font: inherit; font-size: .85rem; font-weight: 700; background: var(--surface-2); color: var(--text); cursor: pointer; }
 .install-note { margin: 10px 0 0; color: var(--muted); font-size: .9rem; text-align: center; }
 .sheet :focus:not(:focus-visible), .sheet-body:focus { outline: none; }

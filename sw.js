@@ -1,6 +1,6 @@
 // Cache offline: el juego funciona sin conexión una vez abierto.
 // Al publicar cambios, subir el número de CACHE para que los celulares bajen los archivos nuevos.
-const CACHE = 'infierno-v2';
+const CACHE = 'infierno-v3';
 const FILES = [
   './', 'index.html', 'styles.css', 'app.js', 'cards.js', 'manifest.json',
   'assets/fondo.webp', 'assets/icon-192.png', 'assets/icon-512.png',

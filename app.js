@@ -449,6 +449,13 @@ $('#open-install').addEventListener('click', () => {
   openDialog($('#install-dialog'));
 });
 document.querySelectorAll('.install-tab').forEach((t) => t.addEventListener('click', () => setInstallTab(t.dataset.os)));
+// Copiar la dirección del juego (para pegarla en Chrome o Safari).
+document.querySelectorAll('.copy-url').forEach((b) => b.addEventListener('click', () => {
+  const done = () => { b.textContent = '¡Copiado!'; setTimeout(() => { b.textContent = 'Copiar'; }, 2000); };
+  const selectText = () => { const r = document.createRange(); r.selectNodeContents(b.previousElementSibling); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+  if (navigator.clipboard?.writeText) navigator.clipboard.writeText(b.dataset.url).then(done, selectText);
+  else selectText();
+}));
 $('#install-ok').addEventListener('click', () => closeDialog($('#install-dialog')));
 
 // Tocar fuera de un diálogo lo cierra (salvo el de fin de partida).
