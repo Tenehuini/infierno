@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#120202">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Infierno">
+  <title>Infierno</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="app">
+
+    <!-- Pantalla 1: Presentación -->
+    <section class="screen home" id="screen-home" data-active>
+      <div class="home-hero">
+        <img class="home-card" src="assets/cards/carta_dorso.webp" alt="">
+        <h1 class="title">Infierno</h1>
+        <p class="tagline">Un juego de cartas solitario.<br>Rescatá las almas, juntá estrellas y escapá por el portal.</p>
+      </div>
+
+      <footer class="bottom stack">
+        <button id="continue-btn" class="btn btn-secondary" hidden>Continuar partida</button>
+        <button id="play-btn" class="btn btn-primary">Jugar</button>
+        <button id="rules-btn" class="btn btn-ghost">📜 Cómo se juega</button>
+        <p class="links"><button type="button" id="open-install" class="link-btn">📲 Cómo instalar la app</button></p>
+        <p class="credit">Diseño original de Martin Sgattoni · losjuegosdemartin.com</p>
+      </footer>
+    </section>
+
+    <!-- Pantalla 2: Elegir nivel -->
+    <section class="screen" id="screen-levels">
+      <header class="top">
+        <button class="back" id="back-home" aria-label="Volver">‹</button>
+        <h1>Elegí el nivel</h1>
+        <p class="sub">Más dificultad: más estrellas y más demonios.</p>
+      </header>
+      <div id="level-list" class="level-list"></div>
+    </section>
+
+    <!-- Pantalla 3: Partida -->
+    <section class="screen game" id="screen-game">
+      <header class="top">
+        <button class="back" id="quit-game" aria-label="Salir de la partida">×</button>
+        <h1 id="level-title" class="level-title"></h1>
+        <button class="help" id="game-rules" aria-label="Reglas">?</button>
+      </header>
+
+      <div class="status" id="status">
+        <div class="status-row">
+          <span class="stars" id="stars" aria-label="Estrellas"></span>
+          <span class="hearts" id="hearts" aria-label="Almas"></span>
+        </div>
+        <p class="status-escape" id="status-escape" hidden>¡Buscá el portal para escapar!</p>
+      </div>
+
+      <div class="row-wrap">
+        <div class="row" id="row" aria-label="Fila de cartas"></div>
+        <p class="row-legend">← fondo de la fila · carta activa →</p>
+      </div>
+
+      <div class="stage">
+        <div class="big-wrap" id="big-wrap"><div id="big-card"></div></div>
+        <p class="card-name" id="card-name"></p>
+      </div>
+
+      <p class="toast" id="toast" role="status" aria-live="polite"></p>
+
+      <footer class="bottom actions" id="actions"></footer>
+    </section>
+
+  </main>
+
+  <!-- Elegir cuántas cartas desplazar -->
+  <dialog id="pick-dialog" class="sheet" aria-labelledby="pick-title">
+    <h2 id="pick-title">¿Cuántas cartas desplazar?</h2>
+    <div class="pick-grid" id="pick-grid"></div>
+    <button type="button" id="pick-cancel" class="btn btn-ghost">Cancelar</button>
+  </dialog>
+
+  <!-- Fin de la partida -->
+  <dialog id="end-dialog" class="sheet end" aria-labelledby="end-title">
+    <p class="end-emoji" id="end-emoji"></p>
+    <h2 id="end-title"></h2>
+    <p id="end-msg" class="end-msg"></p>
+    <button type="button" id="end-again" class="btn btn-primary">Jugar de nuevo</button>
+    <button type="button" id="end-levels" class="btn btn-ghost">Cambiar de nivel</button>
+  </dialog>
+
+  <!-- Confirmar salida -->
+  <dialog id="quit-dialog" class="sheet" aria-labelledby="quit-title">
+    <h2 id="quit-title">¿Salir de la partida?</h2>
+    <p class="end-msg">Vas a poder continuarla desde la pantalla de inicio.</p>
+    <button type="button" id="quit-yes" class="btn btn-primary">Salir</button>
+    <button type="button" id="quit-no" class="btn btn-ghost">Seguir jugando</button>
+  </dialog>
+
+  <!-- Reglas -->
+  <dialog id="rules-dialog" class="sheet" aria-labelledby="rules-title">
+    <h2 id="rules-title">Cómo se juega</h2>
+    <div class="sheet-body">
+      <h3>Objetivo</h3>
+      <ol>
+        <li><b>Rescatá las 4 almas</b> (cartas verdes): revelalas.</li>
+        <li><b>Juntá estrellas</b>: rotá cartas para que su estrella quede <b>arriba a la derecha</b>. Las estrellas de abajo no cuentan.</li>
+        <li><b>Escapá por el portal</b>: cuando cumplas lo anterior, encontrá el portal y rotalo.</li>
+      </ol>
+      <h3>Cada turno</h3>
+      <p>Jugás siempre con la <b>carta activa</b>, la última de la fila (la de la derecha).</p>
+      <ul>
+        <li><b>↶ Revelar</b>: dar vuelta una carta boca abajo.</li>
+        <li><b>↻ Rotar</b>: girar una carta 180°. Si la volvés a rotar, vuelve a su posición.</li>
+        <li><b>➔ Desplazar</b>: mandar la carta activa al fondo de la fila junto con las que tiene detrás. El número de arriba a la izquierda dice cuántas cartas se mueven en total. Si dice <b>?</b>, elegís vos (de 1 a 5).</li>
+      </ul>
+      <h3>Demonios (cartas rojas)</h3>
+      <ul>
+        <li>Revelar un demonio no hace nada en el momento.</li>
+        <li>La primera vez que un demonio revelado llega a ser la carta activa, <b>tenés que rotarlo</b> antes de desplazarlo.</li>
+        <li>Si un demonio <b>ya rotado</b> vuelve a ser la carta activa, <b>perdés</b>.</li>
+      </ul>
+      <h3>Colores</h3>
+      <p><span class="dot verde"></span> Almas y portal · <span class="dot amarillo"></span> Lugares del infierno · <span class="dot rojo"></span> Demonios</p>
+    </div>
+    <button type="button" id="rules-ok" class="btn btn-primary">Entendido</button>
+  </dialog>
+
+  <!-- Cómo instalar -->
+  <dialog id="install-dialog" class="sheet" aria-labelledby="install-title">
+    <h2 id="install-title">Instalar la app</h2>
+    <p id="install-done" class="install-note" hidden>✅ Ya estás usando la app instalada.</p>
+    <div class="install-tabs" role="tablist">
+      <button type="button" role="tab" class="install-tab" data-os="android" aria-selected="true">Android</button>
+      <button type="button" role="tab" class="install-tab" data-os="ios" aria-selected="false">iPhone</button>
+    </div>
+    <div class="sheet-body">
+      <div class="install-panel" data-os="android" role="tabpanel">
+        <ol>
+          <li>Abrí esta página en <b>Chrome</b> (o en el navegador que uses: Samsung Internet, Edge, Firefox…).</li>
+          <li>Tocá el menú del navegador: <b>⋮</b> (tres puntos) o <b>≡</b> (tres rayas), arriba o abajo a la derecha.</li>
+          <li>Elegí <b>Instalar app</b>. Si no aparece, buscá <b>Agregar a pantalla principal</b> o <b>Agregar página a → Pantalla de inicio</b>.</li>
+          <li>Confirmá con <b>Instalar</b> o <b>Agregar</b>.</li>
+        </ol>
+        <p class="install-note">El ícono de la calavera queda en la pantalla de inicio, como cualquier app.</p>
+      </div>
+      <div class="install-panel" data-os="ios" role="tabpanel" hidden>
+        <ol>
+          <li>Abrí esta página en <b>Safari</b> (es lo más seguro; en otros navegadores no siempre aparece la opción).</li>
+          <li>Tocá el botón <b>Compartir</b>: el cuadrado con una flecha hacia arriba ⬆️. Según la versión está en la barra de abajo, arriba, o dentro del menú <b>⋯</b>.</li>
+          <li>Deslizá hacia abajo y elegí <b>Agregar a inicio</b> (o <b>Agregar a pantalla de inicio</b>).</li>
+          <li>Tocá <b>Agregar</b>, arriba a la derecha.</li>
+        </ol>
+        <p class="install-note">El ícono queda en la pantalla de inicio. Funciona igual en iPad.</p>
+      </div>
+      <p class="install-note">Una vez abierta con internet, la app funciona sin conexión.</p>
+    </div>
+    <button type="button" id="install-ok" class="btn btn-primary">Entendido</button>
+  </dialog>
+
+  <script src="cards.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "Infierno",
+  "short_name": "Infierno",
+  "description": "Juego de cartas solitario: rescatá las almas y escapá del infierno.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#120202",
+  "theme_color": "#120202",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
