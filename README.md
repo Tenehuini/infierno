@@ -4,6 +4,8 @@ Versión web instalable (PWA) de **Infierno**, el juego de cartas solitario dise
 ([losjuegosdemartin.com](https://www.losjuegosdemartin.com)). Es la misma lógica que `infierno_python/`,
 rehecha en HTML/CSS/JS para jugar con el celular en vertical. Sin publicidad y funciona sin internet.
 
+**Abrir el juego:** https://tenehuini.github.io/infierno/
+
 ## Probarlo en la compu
 
 ```bash
@@ -15,20 +17,19 @@ Y abrir http://localhost:8000 (en Chrome, con las herramientas de desarrollo en 
 
 ## Publicarlo
 
-Son archivos estáticos: se puede publicar igual que El Impostor, en GitHub Pages
-(repositorio → Settings → Pages → rama `main`, carpeta raíz). Para instalarse como app
-tiene que servirse por **https**.
+Está publicado con GitHub Pages desde la rama `main` (carpeta raíz) del repositorio
+`Tenehuini/infierno`. Cada `git push` a `main` actualiza el sitio en un par de minutos.
 
 ## Instalar la aplicación en el celular
 
 ### Android
-1. Abrí la página del juego en **Chrome**.
+1. Abrí **Chrome** y entrá a https://tenehuini.github.io/infierno/
 2. Tocá el menú **⋮** (arriba a la derecha).
 3. Elegí **Instalar app** (o **Agregar a pantalla principal**).
 4. Confirmá con **Instalar**.
 
 ### iPhone
-1. Abrí la página del juego en **Safari**.
+1. Abrí **Safari** y entrá a https://tenehuini.github.io/infierno/
 2. Tocá **Compartir** (el cuadrado con la flecha hacia arriba).
 3. Elegí **Agregar a inicio** y tocá **Agregar**.
 
