@@ -257,3 +257,24 @@ body {
 .copy-url { flex: none; border: 0; border-radius: 8px; padding: 8px 10px; font: inherit; font-size: .85rem; font-weight: 700; background: var(--surface-2); color: var(--text); cursor: pointer; }
 .install-note { margin: 10px 0 0; color: var(--muted); font-size: .9rem; text-align: center; }
 .sheet :focus:not(:focus-visible), .sheet-body:focus { outline: none; }
+
+/* ---------- Carta ampliada (mantener apretado) ---------- */
+.row, .big-wrap { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.card.mini.is-peek { top: -4px; outline: 2px solid #fff; outline-offset: 1px; }
+.zoom {
+  position: fixed; inset: 0; z-index: 1000; pointer-events: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: calc(16px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
+  background: rgba(8, 0, 0, .88); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  animation: zoom-in .15s ease-out;
+}
+.zoom-card-wrap { width: min(90vw, calc((100dvh - 150px) * 2 / 3), 480px); aspect-ratio: 2 / 3; }
+.zoom-card-wrap > .card { width: 100%; height: 100%; }
+.card.zoomed { font-size: clamp(16px, 5.5vw, 24px); border-width: 3px; box-shadow: 0 10px 40px rgba(0, 0, 0, .9); }
+.zoom-name { margin: 0; font-weight: 800; font-size: 1.2rem; text-align: center; color: var(--text); }
+.zoom-name.n-verde { color: #8dffad; }
+.zoom-name.n-rojo { color: #ff8a80; }
+.zoom-name.n-amarillo { color: #ffe08a; }
+.zoom-detail { margin: 0; color: var(--muted); font-size: .95rem; text-align: center; }
+@keyframes zoom-in { from { opacity: 0; transform: scale(.96); } }
+@media (prefers-reduced-motion: reduce) { .zoom { animation: none; } }

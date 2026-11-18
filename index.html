@@ -62,7 +62,7 @@
 
       <div class="row-wrap">
         <div class="row" id="row" aria-label="Fila de cartas"></div>
-        <p class="row-legend">← fondo de la fila · carta activa →</p>
+        <p class="row-legend">← fondo de la fila · carta activa → · mantené apretada una carta para verla en grande</p>
       </div>
 
       <div class="stage">
@@ -131,6 +131,8 @@
         <li>No tienen estrella, así que rotarlos no suma nada.</li>
         <li>Te frenan: avanzás de a una carta y es más difícil alejar a los demonios o llegar rápido al portal.</li>
       </ul>
+      <h3>Ver una carta en grande</h3>
+      <p>Mantené apretada cualquier carta (de la fila o la grande) para verla ampliada. Sin soltar, deslizá el dedo por la fila para ir pasando de carta. Al soltar, se cierra.</p>
       <h3>Colores</h3>
       <p><span class="dot verde"></span> Almas y portal · <span class="dot amarillo"></span> Lugares del infierno · <span class="dot rojo"></span> Demonios</p>
     </div>
@@ -168,6 +170,13 @@
     </div>
     <button type="button" id="install-ok" class="btn btn-primary">Entendido</button>
   </dialog>
+
+  <!-- Carta ampliada (mientras se mantiene apretada) -->
+  <div class="zoom" id="zoom" hidden aria-live="polite">
+    <div class="zoom-card-wrap"><div id="zoom-card"></div></div>
+    <p class="zoom-name" id="zoom-name"></p>
+    <p class="zoom-detail" id="zoom-detail"></p>
+  </div>
 
   <script src="cards.js"></script>
   <script src="app.js"></script>

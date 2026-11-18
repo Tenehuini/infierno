@@ -201,6 +201,7 @@ function renderRow() {
       miniEls.set(c.id, el);
     }
     fillCard(el, c);
+    el.dataset.id = c.id;
     el.classList.add('mini');
     el.classList.toggle('is-top', idx === n - 1);
     el.style.left = `${offset + idx * step}px`;
@@ -457,6 +458,88 @@ document.querySelectorAll('.copy-url').forEach((b) => b.addEventListener('click'
   else selectText();
 }));
 $('#install-ok').addEventListener('click', () => closeDialog($('#install-dialog')));
+
+// ---------- Ver una carta en grande (mantener apretado) ----------
+// Mientras el dedo siga apoyado se muestra la carta ampliada; deslizándolo por la
+// fila se pasa de una carta a otra. Al soltar se cierra.
+const zoomEl = $('#zoom');
+const zoomCard = $('#zoom-card');
+const HOLD_MS = 300;
+let hold = null; // { timer, active, id, x, y, pointerId }
+
+function cardIdAt(x, y) {
+  const el = document.elementFromPoint(x, y);
+  if (!el) return null;
+  if (el.closest('#big-wrap')) return topCard().id;
+  const mini = el.closest('.mini');
+  return mini ? Number(mini.dataset.id) : null;
+}
+
+function showZoom(id) {
+  const c = game.deck.find((x) => x.id === id);
+  if (!c) return;
+  hold.id = id;
+  fillCard(zoomCard, c);
+  zoomCard.classList.add('zoomed', 'no-anim');
+  const name = $('#zoom-name');
+  const detail = $('#zoom-detail');
+  if (c.estado === 'DORSO') {
+    name.textContent = 'Carta boca abajo';
+    detail.textContent = 'Todavía no sabés qué carta es.';
+    name.className = 'zoom-name';
+  } else {
+    const i = info(c);
+    name.textContent = i.nombre;
+    name.className = 'zoom-name n-' + i.color;
+    const star = (b) => (b ? ' ★' : '');
+    detail.textContent = `Derecha: ${fmt(i.valorF)}${star(i.estrellaF)} · Rotada: ${fmt(i.valorI)}${star(i.estrellaI)}`
+      + (c.estado === 'ROTADA' ? ' · ahora está rotada' : '');
+  }
+  document.querySelectorAll('.mini.is-peek').forEach((e) => e.classList.remove('is-peek'));
+  miniEls.get(id)?.classList.add('is-peek');
+}
+
+function endHold() {
+  if (!hold) return;
+  clearTimeout(hold.timer);
+  hold = null;
+  zoomEl.hidden = true;
+  document.querySelectorAll('.mini.is-peek').forEach((e) => e.classList.remove('is-peek'));
+}
+
+function startHold(e) {
+  if (!game || e.button > 0) return;
+  const id = cardIdAt(e.clientX, e.clientY);
+  if (id === null) return;
+  endHold();
+  hold = { active: false, id, x: e.clientX, y: e.clientY, pointerId: e.pointerId };
+  hold.timer = setTimeout(() => {
+    if (!hold) return;
+    hold.active = true;
+    zoomEl.hidden = false;
+    showZoom(hold.id);
+    navigator.vibrate?.(15);
+  }, HOLD_MS);
+}
+
+for (const area of [rowEl, $('#big-wrap')]) {
+  area.addEventListener('pointerdown', startHold);
+  area.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+window.addEventListener('pointermove', (e) => {
+  if (!hold || e.pointerId !== hold.pointerId) return;
+  if (!hold.active) {
+    hold.x = e.clientX; hold.y = e.clientY;
+    const id = cardIdAt(e.clientX, e.clientY);
+    if (id !== null) hold.id = id;
+    return;
+  }
+  const id = cardIdAt(e.clientX, e.clientY);
+  if (id !== null && id !== hold.id) showZoom(id);
+});
+window.addEventListener('pointerup', endHold);
+window.addEventListener('pointercancel', endHold);
+window.addEventListener('blur', endHold);
 
 // Tocar fuera de un diálogo lo cierra (salvo el de fin de partida).
 document.querySelectorAll('dialog.sheet:not(.end)').forEach((d) => d.addEventListener('click', (e) => {
